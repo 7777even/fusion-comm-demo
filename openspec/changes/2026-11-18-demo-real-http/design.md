@@ -18,11 +18,11 @@
 - `src/api/config.ts`：模式与连接配置单一真源；新增 `VITE_FC_MOCK` 字段到 `env.d.ts`。
 - `src/api/client.ts`：`fcPost` 统一分发；真实分支做 `resp.ok` 与 `code !== 0` 双重校验，错误带上 `code/msg`。
 - `src/api/sign.ts`：签名纯函数，不改实现。
-- `src/services/communication.ts`：原样透传 34 个真实端点；新增 3 个场景适配函数：
-  - `sceneEnterprises()` → `queryRegions({ pageNum:1, pageSize:50 })` → `{ total, rows:[{ id:regionId, name:regionName, scale:totalTerminals }] }`
-  - `sceneCameras()` → `queryCameras({ pageNum:1, pageSize:50 })` → `{ total, rows:[{ id:camIndex, name, status:linkType }] }`
-  - `scenePatchTasks()` → `recordsQuery({})` → `{ total, rows:[{ id, title:callerNum+'→'+destination, time:callTime }] }`
-- `src/views/scenarios/Scene01Meeting.vue` / `Scene02Patrol.vue` / `Scene04Consult.vue`：字段消费对齐上述映射结构。
+- `src/services/communication.ts`：原样透传 34 个真实端点；新增 3 个场景适配函数，映射后必须满足 `types/scenario.ts` 的 `Enterprise` / `PatchTask` 与 `Scene02Patrol.vue` 内联 camera 类型，避免页面字段缺失：
+  - `sceneEnterprises()` → `queryRegions({ pageNum:1, pageSize:50 })` → `{ total, rows: Region[]→Enterprise[] }`：`regionId→id`、`regionName→name`、`totalTerminals>0→hasTerminal`、`terminals.split(',')[0]→phone`（无则 `regionId`）、`contact='—'`（文档无此字段）、`lng=0/lat=0`（文档 queryRegions 无坐标）、`status='未通知'`
+  - `sceneCameras()` → `queryCameras({ pageNum:1, pageSize:50 })` → `{ total, rows: Camera[] }`：`camIndex→cameraId`、`name→name`、`status??linkType→status`（`linkType` 是连接方式、`status` 是 0/1/2 在线态，文档两者都有，优先 `status`）
+  - `scenePatchTasks()` → `recordsQuery({ pageNum:1, pageSize:50 })` → `{ total, rows: CallRecord[]→PatchTask[] }`：`url→id`（无则 `callerNum-destination-startTime` 拼接）、`callType 文案→type`、`callerNum+'→'+destination→location`、`callerNum→monitor`、`status='待核查'`、`evidence=false`（通话记录无工单状态，展示为近似工单流）
+- `src/views/scenarios/Scene01Meeting.vue` / `Scene02Patrol.vue` / `Scene04Consult.vue`：消费 `Enterprise[]`（id/name/hasTerminal/phone/contact）、`Camera[]`（cameraId/name/status）、`PatchTask[]`（id/type/location/monitor/status/evidence），与 `types/scenario.ts` 定义一致，页面无需改字段访问；仅当映射字段与模板 prop 名不一致时调整。
 - `.env.example`：模板文件，不含真实值。
 
 ## 关键决策

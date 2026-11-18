@@ -21,17 +21,16 @@
 
 ## 3. 场景端点映射真实接口
 
-- [ ] `src/services/communication.ts`：`sceneEnterprises` 改为调 `queryRegions` 并映射 `regionId→id` / `regionName→name` / `totalTerminals→scale`。
-- [ ] `src/services/communication.ts`：`sceneCameras` 改为调 `queryCameras` 并映射 `camIndex→id` / `name→name` / `linkType→status`。
-- [ ] `src/services/communication.ts`：`scenePatchTasks` 改为调 `recordsQuery` 并映射为 `{id,title,time}`（通话记录当工单流，语义近似）。
+- [ ] `src/services/communication.ts`：`sceneEnterprises` 调 `queryRegions({pageNum:1,pageSize:50})` 并映射为完整 `Enterprise`（`regionId→id`、`regionName→name`、`totalTerminals>0→hasTerminal`、`terminals[0]→phone` 否则 `regionId`、`contact='—'`、`lng/lat=0`、`status='未通知'`）。
+- [ ] `src/services/communication.ts`：`sceneCameras` 调 `queryCameras({pageNum:1,pageSize:50})` 并映射 `camIndex→cameraId`、`name→name`、`status??linkType→status`。
+- [ ] `src/services/communication.ts`：`scenePatchTasks` 调 `recordsQuery({pageNum:1,pageSize:50})` 并映射为完整 `PatchTask`（`url→id` 否则拼接、`callType 文案→type`、`callerNum+'→'+destination→location`、`callerNum→monitor`、`status='待核查'`、`evidence=false`）。
 - [ ] mock 分发器 `handler.ts` 保留 `__scene__/*` case 但标注"仅 mock 回退态使用"；真实态不再抵达。
 
 ## 4. 场景页面字段消费对齐
 
-- [ ] `Scene01Meeting.vue`：`enterprise.id/name/scale` 字段消费对齐（如原用 `label/value` 则调整）。
-- [ ] `Scene02Patrol.vue`：`camera.id/name/status` 字段消费对齐。
-- [ ] `Scene04Consult.vue`：`enterprise.id/name` 字段消费对齐。
-- [ ] 核对 Scene02 的 patchTasks 消费字段（若使用）对齐 `{id,title,time}`。
+- [ ] `Scene01Meeting.vue` / `Scene04Consult.vue`：确认消费 `Enterprise[]` 的 `id/name/hasTerminal/phone/contact` 与映射一致。
+- [ ] `Scene02Patrol.vue`：确认消费 camera 的 `cameraId/name/status` 与 `PatchTask` 的 `id/type/location/monitor/status` 与映射一致。
+- [ ] 若映射字段已与页面/类型定义完全一致，则页面无需改动（在 tasks 勾选时注明"零改动，映射层已对齐"）。
 
 ## 5. 守门与归档
 

@@ -25,17 +25,17 @@ Demo 的 `/openapi/*` 接口调用默认走真实 HTTP，按申讯 V1.3 文档�
 #### Scenario: 企业列表来自区域查询
 
 - **WHEN** 场景页调用 `sceneEnterprises()`
-- **THEN** 服务层调 `queryRegions()` 并把 `regionId/regionName/totalTerminals` 映射为页面期望的 `id/name/scale`
+- **THEN** 服务层调 `queryRegions()` 并把 `regionId/regionName/totalTerminals/terminals` 映射为满足 `Enterprise` 类型的 `id/name/hasTerminal/phone/contact/lng/lat/status`，页面无需改字段访问
 
 #### Scenario: 摄像头列表来自监控点查询
 
 - **WHEN** 场景页调用 `sceneCameras()`
-- **THEN** 服务层调 `queryCameras()` 并把 `camIndex/name/linkType` 映射为页面期望的 `id/name/status`
+- **THEN** 服务层调 `queryCameras()` 并把 `camIndex/name/status` 映射为页面期望的 `cameraId/name/status`，页面无需改字段访问
 
 #### Scenario: 工单列表来自通话记录查询
 
 - **WHEN** 场景页调用 `scenePatchTasks()`
-- **THEN** 服务层调 `recordsQuery()` 并把通话记录映射为页面期望的 `{id,title,time}`（语义近似，通话记录当工单流展示）
+- **THEN** 服务层调 `recordsQuery()` 并把 `url/callType/callerNum/destination` 映射为满足 `PatchTask` 类型的 `id/type/location/monitor/status/evidence`（语义近似，通话记录当工单流展示），页面无需改字段访问
 
 ## MODIFIED Requirements
 
