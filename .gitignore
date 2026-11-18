@@ -5,3 +5,7 @@ dist/
 .env.*.local
 .DS_Store
 *.log
+engineering/qa/evidence/
+.work-*.ps1
+.work-*.mjs
+.work-*.json
