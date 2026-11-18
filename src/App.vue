@@ -85,7 +85,7 @@ const unread = computed(() => store.events.filter((e) => e.level === 'danger' ||
           <el-tag v-else size="small" type="success" effect="dark">LIVE</el-tag>
         </div>
         <div style="display:flex;align-items:center;gap:var(--space-md)">
-          <span class="mini muted"><Connection style="vertical-align:middle" /> 平台通道正常</span>
+          <span class="mini muted"><Connection style="width:1em;height:1em;vertical-align:middle" /> 平台通道正常</span>
           <el-badge :value="unread" :hidden="!unread" :max="99">
             <el-button :icon="Bell" circle @click="showEvents = !showEvents" />
           </el-badge>

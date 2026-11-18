@@ -141,7 +141,7 @@ onMounted(loadGroups)
             <el-button :icon="Plus" @click="changeVolume(10)" />
             <el-tag type="primary">{{ volume }}%</el-tag>
           </div>
-          <div class="mini muted" style="margin-top:8px"><Setting style="vertical-align:middle" /> 对应 setVolume / incVolume / decVolume</div>
+          <div class="mini muted" style="margin-top:8px"><Setting style="width:1em;height:1em;vertical-align:middle" /> 对应 setVolume / incVolume / decVolume</div>
         </div>
       </el-col>
 
