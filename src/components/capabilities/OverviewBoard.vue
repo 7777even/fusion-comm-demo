@@ -71,14 +71,6 @@ watch(() => store.events.length, renderChart)
 
 <template>
   <div>
-    <div class="page-head">
-      <div>
-        <h1 class="page-title">态势总览</h1>
-        <p class="page-desc">融合通信资源实时状态 · 电话 / 广播 / 对讲 / 应急联动</p>
-      </div>
-      <el-tag type="success" effect="dark"><span class="dot green" />系统运行正常</el-tag>
-    </div>
-
     <el-row :gutter="16" class="section-gap">
       <el-col :span="6">
         <div class="stat-card">

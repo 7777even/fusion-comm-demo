@@ -87,14 +87,6 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="page-head">
-      <div>
-        <h1 class="page-title">电话调度</h1>
-        <p class="page-desc">一键直通 · 多方会议 · 分级调度（强插 / 强拆 / 监听）</p>
-      </div>
-      <div class="endpoint-note">POST /openapi/dispatchComm/terminalOperator</div>
-    </div>
-
     <el-row :gutter="16">
       <el-col :span="6">
         <div class="panel" style="height:100%">
