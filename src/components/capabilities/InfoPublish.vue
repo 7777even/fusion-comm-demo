@@ -115,14 +115,6 @@ async function pushNotice() {
 
 <template>
   <div>
-    <div class="page-head">
-      <div>
-        <h1 class="page-title">信息发布</h1>
-        <p class="page-desc">短信推送 · 未回复自动语音升级 · 移动端公告指定范围</p>
-      </div>
-      <div class="endpoint-note">POST /openapi/linkTask/send · rule 2/3/4/7</div>
-    </div>
-
     <el-tabs v-model="tab" class="publish-tabs">
       <el-tab-pane label="短信 + 语音升级" name="sms">
         <el-row :gutter="16">

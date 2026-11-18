@@ -74,14 +74,6 @@ onMounted(loadGroups)
 
 <template>
   <div>
-    <div class="page-head">
-      <div>
-        <h1 class="page-title">扩音广播</h1>
-        <p class="page-desc">指定广播设备或区域进行扩音通讯 · TTS 文字转语音 · 音量控制</p>
-      </div>
-      <div class="endpoint-note">POST /openapi/broadcast/startTtsTask</div>
-    </div>
-
     <el-row :gutter="16">
       <el-col :span="6">
         <div class="panel" style="height:100%">

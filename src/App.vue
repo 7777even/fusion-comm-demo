@@ -2,9 +2,7 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-  DataBoard, Phone, VideoPlay, Promotion, Warning, Connection,
-  Bell, ArrowDown, Calendar, Location, WarningFilled, VideoCamera,
-  MapLocation
+  Connection, Bell, ArrowDown, Calendar, Location, WarningFilled, VideoCamera, MapLocation
 } from '@element-plus/icons-vue'
 import { isMockMode } from '@/api/client'
 import { useCommStore } from '@/stores/comm'
@@ -16,16 +14,6 @@ const mock = isMockMode()
 const showEvents = ref(false)
 
 const groups = [
-  {
-    title: '基础能力',
-    items: [
-      { path: '/dashboard', title: '态势总览', icon: DataBoard },
-      { path: '/phone', title: '电话调度', icon: Phone },
-      { path: '/broadcast', title: '扩音广播', icon: VideoPlay },
-      { path: '/publish', title: '信息发布', icon: Promotion },
-      { path: '/emergency', title: '应急联动与检索', icon: Warning }
-    ]
-  },
   {
     title: '平时·日常管理',
     items: [
@@ -44,7 +32,7 @@ const groups = [
 ]
 
 const currentTitle = computed(() =>
-  route.meta.title as string ?? SCENE_BY_PATH[route.path]?.title ?? '态势总览'
+  route.meta.title as string ?? SCENE_BY_PATH[route.path]?.title ?? '园区多企业远程会议'
 )
 const unread = computed(() => store.events.filter((e) => e.level === 'danger' || e.level === 'warning').length)
 </script>

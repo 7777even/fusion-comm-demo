@@ -82,3 +82,26 @@ Demo 的 `/openapi/*` 接口调用默认走真实 HTTP，按申讯 V1.3 文档�
 
 - **WHEN** 场景页调用 `sceneEnterprises()` / `sceneCameras()` / `scenePatchTasks()`
 - **THEN** 服务层分别调 `queryRegions` / `queryCameras` / `recordsQuery`，把真实字段映射为满足 `Enterprise` / Camera `{cameraId,name,status}` / `PatchTask` 类型的结构（含 mock 回退态 `cameraId` 兜底），页面字段访问零改动
+
+## 本仓增量：场景驱动导航重构（2026-11-18-scenario-driven-nav）
+
+> 由 `2026-11-18-scenario-driven-nav` 变更回填。导航从"基础能力 + 场景并列 3 组 10 项"改为"纯场景主线 2 组 5 项"；5 项基础能力以组件形式内嵌到场景页第 6 个"支撑能力"页签。调用链、签名与接口映射不变。
+
+### Requirement: 场景驱动导航与场景内支撑能力
+
+demo 的导航以方案场景为唯一主线；原"基础能力"不再作为独立导航/页面，改为场景页内嵌的支撑能力，能力→场景映射以 `scenes/meta.ts` 的 `capabilities` 字段为单一真源。
+
+#### Scenario: 纯场景主线导航
+
+- **WHEN** 用户打开 demo 并查看侧边栏
+- **THEN** 只有"平时·日常管理"（01 会议、02 巡检）与"战时·应急指挥"（03 接报、04 会商、05 GIS）两组共 5 个场景入口，不出现"基础能力"分组；根路径 `/` 与未知路径统一重定向到 `/scene/01-meeting`
+
+#### Scenario: 场景内嵌支撑能力
+
+- **WHEN** 用户在任一场景页切到"支撑能力"页签
+- **THEN** 按 `meta.capabilities` 用 `<component :is>` 动态渲染对应能力组件（01→电话调度；02→应急联动与检索；03→应急联动+信息发布；04→电话调度+应急联动；05→态势总览+应急联动+扩音广播），无 iframe、无跳转，共享 `useCommStore`，行为与原整页一致
+
+#### Scenario: 旧能力路由删除
+
+- **WHEN** 访问 `/dashboard` / `/phone` / `/broadcast` / `/publish` / `/emergency` 中任一路由
+- **THEN** 由通配兜底重定向到场景 01，旧 5 个 view 与路由均不存在；广播无全局入口，并入场景 05 GIS

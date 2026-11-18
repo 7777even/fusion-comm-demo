@@ -30,12 +30,15 @@ export interface Dependency {
   tag: DependencyTag
 }
 
+export type CapabilityKey = 'overview' | 'phone' | 'broadcast' | 'publish' | 'emergency'
+
 export interface ScenarioMeta {
   no: string
   path: string
   title: string
   stage: '平时·日常管理' | '战时·应急指挥'
   value: string
+  capabilities?: CapabilityKey[]
   story: string[]
   card: SceneCard
   flow: SceneStep[]

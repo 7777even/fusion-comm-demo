@@ -90,14 +90,6 @@ async function doSummary(row: CallRecordItem) {
 
 <template>
   <div>
-    <div class="page-head">
-      <div>
-        <h1 class="page-title">应急联动与检索</h1>
-        <p class="page-desc">一键报警联动 · 全流程录音存储 · 时间戳与关键词快速检索</p>
-      </div>
-      <div class="endpoint-note">sosLinkage/add · records/query · record/asr</div>
-    </div>
-
     <el-tabs v-model="tab">
       <el-tab-pane label="一键报警联动" name="sos">
         <el-row :gutter="16">
