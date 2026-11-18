@@ -1,0 +1,27 @@
+{
+  "name": "fusion-comm-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "融合通信集成可行 Demo — 基于申讯融合通信平台 OpenAPI V1.3",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "echarts": "^5.5.1",
+    "element-plus": "^2.9.3",
+    "pinia": "^2.3.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "~5.6.3",
+    "vite": "^5.4.11",
+    "vue-tsc": "^2.2.0"
+  }
+}
