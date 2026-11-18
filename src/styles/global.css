@@ -1,0 +1,139 @@
+﻿* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(
+      circle at 50% -12%,
+      color-mix(in srgb, var(--color-accent) 10%, transparent),
+      transparent 62%
+    ),
+    var(--gradient-bg);
+  background-attachment: fixed;
+}
+
+/* 源项目全局：细滚动条 + 深色 color-scheme */
+html {
+  color-scheme: dark;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent) var(--scrollbar-track);
+}
+
+/* 源项目滚动条：8px 胶囊 + 渐变拇指 + 发光 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 30px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--scrollbar-thumb) padding-box;
+  box-shadow: 0 0 7px color-mix(in srgb, var(--color-accent) 34%, transparent);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover) padding-box;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 58%, transparent);
+}
+
+/* =========================================================================
+ * §4 / §8 玻璃面板公共样式 — 源项目：半透明深蓝底 + 蓝描边 + 内发光
+ * ========================================================================= */
+.glass-panel {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--glow-inner);
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+  pointer-events: none;
+}
+
+.glass-panel:hover {
+  border-color: var(--border-glow);
+  box-shadow:
+    var(--glow-inner),
+    0 0 10px color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+/* §8.2 面板标题：青色竖条 + 发光（源项目标题 500 字重白字） */
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin: 0;
+  font-size: var(--font-size-h2);
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--panel-title-color);
+}
+
+.panel-title::before {
+  content: '';
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  box-shadow: var(--panel-title-glow);
+}
+
+/* 列表隔行变色 */
+.row-odd {
+  background: var(--row-alt-bg);
+}
+
+/* 数字字体（图 5-3：Poppins / DIN） */
+.font-number {
+  font-family: var(--font-family-num);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 语义色快捷类（与 dashboard tone-* 对齐） */
+.tone-accent {
+  color: var(--color-accent);
+}
+
+.tone-success {
+  color: var(--color-success);
+}
+
+.tone-warning {
+  color: var(--color-warning);
+}
+
+.tone-danger {
+  color: var(--color-danger);
+}
+
+.tone-info {
+  color: var(--color-text-muted);
+}
