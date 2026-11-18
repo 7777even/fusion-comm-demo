@@ -9,7 +9,8 @@ import { emitEvent } from './eventStream'
 import type { ApiResponse } from '../client'
 import {
   mockRegions, mockTerminals, mockWalkieTalkies, mockBroadcastGroups,
-  mockBroadcastMembers, mockCallRecords, mockSmsTemplates
+  mockBroadcastMembers, mockCallRecords, mockSmsTemplates,
+  mockEnterprises, mockPatchTasks, mockDrillPlans
 } from './data'
 
 const ok = (data?: unknown, extra: Record<string, unknown> = {}): ApiResponse => ({
@@ -209,6 +210,24 @@ export async function mockRequest(
 
     case EP.previewUrl:
       return ok({ url: 'rtsp://192.168.1.100:554/live' })
+
+    case '__scene__/enterprises':
+      return ok(undefined, { total: mockEnterprises.length, rows: mockEnterprises })
+
+    case '__scene__/cameras':
+      return ok(undefined, {
+        total: 2,
+        rows: [
+          { cameraId: 'CAM-KQ-01', name: '罐区全景', status: 1 },
+          { cameraId: 'CAM-XQ-01', name: '装卸区', status: 1 }
+        ]
+      })
+
+    case '__scene__/patchTasks':
+      return ok(undefined, { total: mockPatchTasks.length, rows: mockPatchTasks })
+
+    case '__scene__/drillPlans':
+      return ok(undefined, { total: mockDrillPlans.length, rows: mockDrillPlans })
 
     default:
       return ok()
