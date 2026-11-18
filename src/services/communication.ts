@@ -1,8 +1,45 @@
 import { fcPost } from '../api/client.ts'
 import { EP } from '../api/endpoints.ts'
+import type { Enterprise, PatchTask } from '../types/scenario.ts'
+import type { Region, CallRecordItem } from '../types/index.ts'
 export { unwrapBody, unwrapRows } from './envelope.ts'
 
 type Params = Record<string, unknown>
+
+const CALL_TYPE: Record<number, string> = {
+  0: '电话录音', 1: '呼入未接', 2: '呼入已接', 3: '呼出通话', 4: 'MCU 接续', 5: '断线通话'
+}
+
+function toEnterprise(r: Region): Enterprise {
+  const terminals = String((r as unknown as { terminals?: string }).terminals ?? '')
+  return {
+    id: r.regionId,
+    name: r.regionName,
+    hasTerminal: Number(r.totalTerminals ?? 0) > 0,
+    contact: '—',
+    phone: terminals.split(',')[0] || r.regionId,
+    lng: 0,
+    lat: 0,
+    status: '未通知'
+  }
+}
+
+type CameraRow = { camIndex?: string; name?: string; status?: number; linkType?: number }
+function toCamera(c: CameraRow) {
+  return { cameraId: c.camIndex ?? '', name: c.name ?? '', status: c.status ?? c.linkType ?? 0 }
+}
+
+function toPatchTask(r: CallRecordItem, i: number): PatchTask {
+  return {
+    id: r.url || `${r.callerNum}-${r.destination}-${r.startTime}-${i}`,
+    type: CALL_TYPE[r.callType] ?? '通话记录',
+    location: `${r.callerNum}→${r.destination}`,
+    owner: r.callerNum,
+    monitor: r.destination,
+    status: '待核查',
+    evidence: false
+  }
+}
 
 /**
  * 融合通信服务层。
@@ -38,8 +75,17 @@ export const communicationApi = {
   // 事件订阅（阶段二预留：回流后改由平台 WS 回推，当前页面未引用）
   eventSubscription: (p: Params) => fcPost(EP.eventSubscription, p),
   eventUnSubscription: (p: Params) => fcPost(EP.eventUnSubscription, p),
-  // 场景拟真数据（mock 专用路径，回流时替换为后端端点）
-  sceneEnterprises: () => fcPost('__scene__/enterprises', {}),
-  sceneCameras: () => fcPost('__scene__/cameras', {}),
-  scenePatchTasks: () => fcPost('__scene__/patchTasks', {})
+  // 场景数据：真实接口 + 字段适配（mock 回退态由 handler.ts 提供 __scene__/*）
+  sceneEnterprises: async () => {
+    const res = await fcPost(EP.queryRegions, { pageNum: 1, pageSize: 50 })
+    return { ...res, rows: ((res.rows ?? []) as Region[]).map(toEnterprise) }
+  },
+  sceneCameras: async () => {
+    const res = await fcPost(EP.cameras, { pageNum: 1, pageSize: 50 })
+    return { ...res, rows: ((res.rows ?? []) as CameraRow[]).map(toCamera) }
+  },
+  scenePatchTasks: async () => {
+    const res = await fcPost(EP.recordsQuery, { pageNum: 1, pageSize: 50 })
+    return { ...res, rows: ((res.rows ?? []) as CallRecordItem[]).map(toPatchTask) }
+  }
 } as const

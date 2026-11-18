@@ -211,6 +211,7 @@ export async function mockRequest(
     case EP.previewUrl:
       return ok({ url: 'rtsp://192.168.1.100:554/live' })
 
+    // 仅 mock 回退态（VITE_FC_MOCK=true）使用；真实态由 services/communication.ts 映射真实端点
     case '__scene__/enterprises':
       return ok(undefined, { total: mockEnterprises.length, rows: mockEnterprises })
 
