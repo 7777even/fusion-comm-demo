@@ -71,18 +71,19 @@ X-CR-Signature = sha256(secretId + "&" + timestamp + "&" + secretKey)
 
 三个 Header（`X-CR-SecretId` / `X-CR-Timestamp` / `X-CR-Signature`）放请求头，每次请求重新生成。用浏览器原生 Web Crypto，无第三方依赖。
 
-## 切换到真实平台
+## 连接平台（默认真实模式）
 
-在项目根目录建 `.env.local`：
+默认进入真实模式，`fcPost` 以 fetch + V1.3 签名直连 `VITE_FC_BASE_URL`，顶栏角标显示 `LIVE`。在项目根目录复制 `.env.example` 为 `.env.local` 并填写：
 
 ```ini
+VITE_FC_MOCK=false
 VITE_FC_BASE_URL=http://<平台IP>:<端口>
 VITE_FC_WS_URL=ws://<平台IP>:11926
 VITE_FC_SECRET_ID=your-secret-id
 VITE_FC_SECRET_KEY=your-secret-key
 ```
 
-`config.ts` 检测到 `VITE_FC_BASE_URL` 后自动进入真实模式，顶栏角标从 `MOCK` 变为 `LIVE`。
+无真实平台时，设 `VITE_FC_MOCK=true` 回退本地模拟（角标显示 `MOCK`，可离线演示完整场景）。`.env.local` 已被 gitignore，请勿提交真实密钥。
 
 > **上线前必读**：浏览器直连平台会有 CORS 跨域限制，且鉴权密钥暴露在前端有安全风险。生产环境应由**后端服务**统一做签名与转发，前端只调自家后端。当前 REAL 模式仅用于演示调用链。
 
