@@ -45,7 +45,7 @@ const unread = computed(() => store.events.filter((e) => e.level === 'danger' ||
       </el-menu>
       <div class="side-foot">
         <div class="mini muted">申讯 OpenAPI V1.3</div>
-        <div class="mini" style="margin-top:6px">
+        <div class="mini" style="margin-top:var(--space-sm)">
           <span class="dot" :class="mock ? 'gray' : 'green'" />
           {{ mock ? '本地模拟模式' : '真实平台模式' }}
         </div>
@@ -54,12 +54,12 @@ const unread = computed(() => store.events.filter((e) => e.level === 'danger' ||
 
     <div class="main-area">
       <header class="topbar">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-size:16px;font-weight:600">{{ currentTitle }}</span>
+        <div style="display:flex;align-items:center;gap:var(--space-sm)">
+          <span style="font-size:var(--font-size-h2);font-weight:600;color:var(--color-text-strong)">{{ currentTitle }}</span>
           <el-tag v-if="mock" size="small" type="warning" effect="dark">MOCK</el-tag>
           <el-tag v-else size="small" type="success" effect="dark">LIVE</el-tag>
         </div>
-        <div style="display:flex;align-items:center;gap:16px">
+        <div style="display:flex;align-items:center;gap:var(--space-md)">
           <span class="mini muted"><Connection style="vertical-align:middle" /> 平台通道正常</span>
           <el-badge :value="unread" :hidden="!unread" :max="99">
             <el-button :icon="Bell" circle @click="showEvents = !showEvents" />
@@ -93,6 +93,6 @@ const unread = computed(() => store.events.filter((e) => e.level === 'danger' ||
 </template>
 
 <style scoped>
-.nav { flex: 1; padding-top: 10px; }
-.side-foot { padding: 16px 20px; border-top: 1px solid var(--fc-border); }
+.nav { flex: 1; padding-top: var(--space-sm); }
+.side-foot { padding: var(--space-md) var(--space-lg); border-top: 1px solid var(--glass-border); }
 </style>
