@@ -21,7 +21,7 @@ const typeName = (t: number) => t === 4 ? 'PDT 对讲' : t === 1 ? '外线电话
 const inRange = computed(() => resources.value.filter((r) => {
   const dx = (r.x - incident.x) * 1.1
   const dy = (r.y - incident.y) * 1.0
-  return Math.sqrt(dx * dx + dy * dy) * 8 <= radius.value / 10
+  return Math.sqrt(dx * dx + dy * dy) * 20 <= radius.value
 }))
 
 function onResSelection(rows: typeof resources.value) {

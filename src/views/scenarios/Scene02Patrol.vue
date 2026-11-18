@@ -12,6 +12,7 @@ import type { PatchTask } from '@/types/scenario'
 const meta = SCENE_BY_PATH['/scene/02-patrol']
 const store = useCommStore()
 const cameras = ref<{ cameraId: string; name: string; status: number }[]>([])
+const selectedCamera = ref('')
 const preview = ref('')
 const tasks = ref<PatchTask[]>([])
 const activeTask = ref('')
@@ -32,7 +33,8 @@ const trackPoints = [
 ]
 
 async function pointCamera() {
-  const res = await fcPost(EP.previewUrl, { camList: [cameras.value[0]?.cameraId ?? 'CAM-KQ-01'], protocol: 'hls' })
+  const camId = selectedCamera.value || cameras.value[0]?.cameraId || 'CAM-KQ-01'
+  const res = await fcPost(EP.previewUrl, { camList: [camId], protocol: 'hls' })
   preview.value = String((res.data as { url?: string })?.url ?? '')
   store.addSceneRoleLog({ step: '02', role: '园区值班员', action: '调取罐区监控点播', system: `取流地址：${preview.value || '（模拟）'}` })
   ElMessage.success('监控点播已发起')
@@ -92,7 +94,7 @@ function closeTask(id: string) {
         <h3 class="panel-title">沿途监控与点呼</h3>
         <el-row :gutter="12">
           <el-col :span="14">
-            <el-select v-model="preview" placeholder="选择摄像头（接口取流）" style="width:100%">
+            <el-select v-model="selectedCamera" placeholder="选择摄像头（接口取流）" style="width:100%">
               <el-option v-for="c in cameras" :key="c.cameraId" :label="c.name" :value="c.cameraId" />
             </el-select>
             <div class="preview-box">{{ preview ? preview : '点击「点播」获取流地址（hls）' }}</div>
