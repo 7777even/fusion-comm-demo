@@ -1,11 +1,27 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useCommStore } from '@/stores/comm'
-import type { ScenarioMeta } from '@/types/scenario'
+import type { ScenarioMeta, CapabilityKey } from '@/types/scenario'
+import OverviewBoard from '@/components/capabilities/OverviewBoard.vue'
+import PhoneDispatch from '@/components/capabilities/PhoneDispatch.vue'
+import BroadcastAudio from '@/components/capabilities/BroadcastAudio.vue'
+import InfoPublish from '@/components/capabilities/InfoPublish.vue'
+import EmergencyLink from '@/components/capabilities/EmergencyLink.vue'
 
 const props = defineProps<{ meta: ScenarioMeta }>()
 const store = useCommStore()
 const active = ref('story')
+
+const capabilityComponents: Record<CapabilityKey, { comp: unknown; title: string }> = {
+  overview: { comp: OverviewBoard, title: '态势总览' },
+  phone: { comp: PhoneDispatch, title: '电话调度' },
+  broadcast: { comp: BroadcastAudio, title: '扩音广播' },
+  publish: { comp: InfoPublish, title: '信息发布' },
+  emergency: { comp: EmergencyLink, title: '应急联动与检索' }
+}
+const capabilityList = computed(() =>
+  (props.meta.capabilities ?? []).map((key) => ({ key, ...capabilityComponents[key] }))
+)
 
 const stageTag: Record<ScenarioMeta['stage'], string> = {
   '平时·日常管理': 'primary',
@@ -108,6 +124,16 @@ const roleRows = computed(() => {
           </el-table>
         </div>
       </el-tab-pane>
+
+      <el-tab-pane label="支撑能力" name="capabilities">
+        <div v-if="capabilityList.length === 0" class="panel">
+          <p class="mini muted">本场景无内嵌支撑能力（接口与能力映射见"依赖功能"页签）。</p>
+        </div>
+        <div v-for="cap in capabilityList" :key="cap.key" class="panel capability-block">
+          <h3 class="panel-title">{{ cap.title }}</h3>
+          <component :is="cap.comp" />
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -121,4 +147,5 @@ const roleRows = computed(() => {
 .flow-step { display: flex; align-items: flex-start; gap: var(--space-sm); padding: var(--space-sm); background: var(--color-panel-soft); border-radius: var(--radius-md); border-left: 3px solid var(--color-accent); }
 .flow-no { color: var(--color-accent); font-family: var(--font-family-num); font-weight: 700; }
 .flow-action { flex: 1; font-size: var(--font-size-helper); line-height: 1.5; }
+.capability-block + .capability-block { margin-top: var(--space-md); }
 </style>
