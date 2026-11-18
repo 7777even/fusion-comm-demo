@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { fcPost } from '@/api/client'
-import { EP, PHONE_ACTION } from '@/api/endpoints'
+import { communicationApi as api } from '@/services/communication'
+import { PHONE_ACTION } from '@/api/endpoints'
 import { useCommStore } from '@/stores/comm'
 import { SCENE_BY_PATH } from '@/scenes/meta'
 import ScenarioShell from '@/components/scenario/ScenarioShell.vue'
@@ -26,7 +26,7 @@ const gateways = computed(() => [
 ])
 
 onMounted(async () => {
-  const res = await fcPost('__scene__/enterprises')
+  const res = await api.sceneEnterprises()
   enterprises.value = (res.rows as Enterprise[]) ?? []
 })
 
@@ -45,14 +45,14 @@ function setAccess(id: string, v: string) {
 async function startMeeting() {
   if (!selected.value.length) { ElMessage.warning('请先选择参会企业'); return }
   const dest = selected.value.map((id) => enterprises.value.find((e) => e.id === id)?.phone ?? id)
-  await fcPost(EP.terminalOperator, { action: 10, sourCaller: '9000', destCalled: dest, conferenceName: '园区安全生产会议' })
+  await api.terminalOperator({ action: 10, sourCaller: '9000', destCalled: dest, conferenceName: '园区安全生产会议' })
   meetingStarted.value = true
   store.addSceneRoleLog({ step: '04', role: '会议管理员', action: `发起会议呼叫 ${dest.length} 方`, system: '按 SIP/H.323 兼容协议连接会场（MOCK 状态）' })
   ElMessage.success('会议已发起，参会方逐步接入')
 }
 
 async function control(action: number, label: string) {
-  await fcPost(EP.terminalOperator, { action, sourCaller: '9000', destCalled: selected.value })
+  await api.terminalOperator({ action, sourCaller: '9000', destCalled: selected.value })
   store.addSceneRoleLog({ step: '05', role: '主持人与会控员', action: `执行${label}`, system: `terminalOperator action=${action} 已下发` })
   ElMessage.success(`${PHONE_ACTION[action as keyof typeof PHONE_ACTION]} 已下发`)
 }

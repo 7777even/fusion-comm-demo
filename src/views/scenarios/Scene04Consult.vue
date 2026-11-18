@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { fcPost } from '@/api/client'
-import { EP } from '@/api/endpoints'
+import { communicationApi as api } from '@/services/communication'
 import { useCommStore } from '@/stores/comm'
 import { SCENE_BY_PATH } from '@/scenes/meta'
 import ScenarioShell from '@/components/scenario/ScenarioShell.vue'
@@ -23,13 +22,13 @@ const allCandidates = computed(() => [
 ])
 
 onMounted(async () => {
-  const res = await fcPost('__scene__/enterprises')
+  const res = await api.sceneEnterprises()
   enterprises.value = (res.rows as Enterprise[]) ?? []
 })
 
 async function startConsult() {
   if (!participants.value.length) { ElMessage.warning('请先选择参会方'); return }
-  await fcPost(EP.terminalOperator, { action: 10, sourCaller: '9000', destCalled: participants.value.map((p) => p.match(/\d{4}$/)?.[0] ?? p), conferenceName: '泄漏事件应急会商' })
+  await api.terminalOperator({ action: 10, sourCaller: '9000', destCalled: participants.value.map((p) => p.match(/\d{4}$/)?.[0] ?? p), conferenceName: '泄漏事件应急会商' })
   started.value = true
   tiles.value = participants.value.slice(0, 6)
   store.addSceneRoleLog({ step: '01', role: '会议操作员', action: `从事件发起会商，选择 ${participants.value.length} 方`, system: '生成与事件关联的会议与邀请清单' })
@@ -37,16 +36,16 @@ async function startConsult() {
 }
 
 async function addVideo() {
-  const res = await fcPost(EP.cameras, { page: 1 })
+  const res = await api.cameras({ page: 1 })
   const cam = ((res.rows as { cameraId: string; name: string }[]) ?? [])[0]
-  await fcPost(EP.previewUrl, { camList: [cam?.cameraId ?? 'CAM-KQ-01'], protocol: 'hls' })
+  await api.previewUrl({ camList: [cam?.cameraId ?? 'CAM-KQ-01'], protocol: 'hls' })
   if (cam && !tiles.value.includes(cam.name)) tiles.value.push(cam.name)
   store.addSceneRoleLog({ step: '04', role: '视频操作员', action: `将监控「${cam?.name ?? '罐区'}」加入会商`, system: '转码、视频分发、多画面（模拟画面）' })
   ElMessage.success('监控画面已入会')
 }
 
 async function control(action: number, label: string) {
-  await fcPost(EP.terminalOperator, { action, sourCaller: '9000', destCalled: participants.value })
+  await api.terminalOperator({ action, sourCaller: '9000', destCalled: participants.value })
   store.addSceneRoleLog({ step: '05', role: '主持人/专家', action: label, system: `terminalOperator action=${action} 已下发` })
   ElMessage.success(`${label}已执行`)
 }

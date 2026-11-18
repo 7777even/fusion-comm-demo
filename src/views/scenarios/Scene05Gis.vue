@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { fcPost } from '@/api/client'
-import { EP } from '@/api/endpoints'
+import { communicationApi as api } from '@/services/communication'
 import { useCommStore } from '@/stores/comm'
 import { SCENE_BY_PATH } from '@/scenes/meta'
 import ScenarioShell from '@/components/scenario/ScenarioShell.vue'
@@ -29,7 +28,7 @@ function onResSelection(rows: typeof resources.value) {
 }
 
 async function loadResources() {
-  const res = await fcPost(EP.queryTerminals, { ddtId: 0, pageNum: 1, pageSize: 100 })
+  const res = await api.queryTerminals({ ddtId: 0, pageNum: 1, pageSize: 100 })
   const rows = ((res.row as { terminalId: string; terminalName: string; terminalType: number; status: number }[]) ?? [])
   resources.value = rows.slice(0, 12).map((r, i) => ({
     ...r,
@@ -48,14 +47,14 @@ function markIncident() {
 async function dispatch() {
   if (!selectedRes.value.length) { ElMessage.warning('请先圈选资源'); return }
   const targets = selectedRes.value
-  await fcPost(EP.terminalOperator, { action: 1, sourCaller: '9000', destCalled: targets })
+  await api.terminalOperator({ action: 1, sourCaller: '9000', destCalled: targets })
   dispatched.value = [...targets]
   store.addSceneRoleLog({ step: '04', role: '调度员', action: `按资源类型调度 ${targets.length} 个终端`, system: '摄像头点播 / PDT 组呼 / 任务派发（跨制式互通受网关约束）' })
   ElMessage.success('调度指令已下发')
 }
 
 async function distributeVideo() {
-  const res = await fcPost(EP.previewUrl, { camList: ['CAM-KQ-01'], protocol: 'hls' })
+  const res = await api.previewUrl({ camList: ['CAM-KQ-01'], protocol: 'hls' })
   store.addSceneRoleLog({ step: '06', role: '视频调度员', action: '高空 AR / 监控视频向现场终端分发', system: `流地址 ${(res.data as { url?: string })?.url ?? '（模拟）'}` })
   ElMessage.success('视频分发已下发')
 }

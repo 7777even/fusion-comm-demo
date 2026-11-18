@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { fcPost } from '@/api/client'
-import { EP, LINK_RULE } from '@/api/endpoints'
+import { communicationApi as api } from '@/services/communication'
+import { LINK_RULE } from '@/api/endpoints'
 import { uuid } from '@/api/sign'
 import { useCommStore } from '@/stores/comm'
 import { SCENE_BY_PATH } from '@/scenes/meta'
@@ -27,7 +27,7 @@ const levelText = computed(() => ({ 1: 'Ⅰ级（一般）', 2: 'Ⅱ级（较大
 const stateColor = (s: string) => s === '已确认' ? 'success' : s === '已接通' ? 'primary' : s === '已送达' ? 'warning' : 'info'
 
 async function acceptReport() {
-  await fcPost(EP.sosAdd, {
+  await api.sosAdd({
     area: report.value.location,
     eventId: eventId.value,
     eventTime: '2026-11-18 14:30:00',
@@ -42,9 +42,9 @@ async function acceptReport() {
 }
 
 async function verifyVideo() {
-  const res = await fcPost(EP.cameras, { page: 1 })
+  const res = await api.cameras({ page: 1 })
   cameras.value = (res.rows as typeof cameras.value) ?? []
-  await fcPost(EP.previewUrl, { camList: [cameras.value[0]?.cameraId ?? 'CAM-KQ-01'], protocol: 'hls' })
+  await api.previewUrl({ camList: [cameras.value[0]?.cameraId ?? 'CAM-KQ-01'], protocol: 'hls' })
   store.addSceneRoleLog({ step: '02', role: '园区值班员', action: '调阅危废仓库监控与高空AR', system: '形成事件初判依据（模拟画面）' })
   ElMessage.success('视频核实完成')
 }
@@ -56,7 +56,7 @@ function confirmLevel() {
 
 async function notifyAll() {
   const mobiles = responders.value.map((r) => r.phone).join(',')
-  await fcPost(EP.linkTaskSend, { mobile: mobiles, rule: 3, eventId: eventId.value, scontent: `危废仓库疑似泄漏，立即响应，位置 ${report.value.location}`, templateCode: 'EMERGENCY' })
+  await api.linkTaskSend({ mobile: mobiles, rule: 3, eventId: eventId.value, scontent: `危废仓库疑似泄漏，立即响应，位置 ${report.value.location}`, templateCode: 'EMERGENCY' })
   responders.value.forEach((r, i) => { r.state = i === 0 ? '已确认' : '已送达' })
   notified.value = true
   store.addSceneRoleLog({ step: '04', role: '系统/值班员', action: `按名单通知 ${responders.value.length} 人（短信+语音）`, system: `linkTask/send rule=${LINK_RULE[3]}，事件 ${eventId.value.slice(0, 8)}` })
@@ -66,7 +66,7 @@ async function notifyAll() {
 async function recallUnconfirmed() {
   const pending = responders.value.filter((r) => r.state === '已送达')
   if (!pending.length) { ElMessage.info('无未确认人员'); return }
-  await fcPost(EP.linkTaskSend, { mobile: pending.map((r) => r.phone).join(','), rule: 7, eventId: eventId.value, vcontent: '请立即确认响应' })
+  await api.linkTaskSend({ mobile: pending.map((r) => r.phone).join(','), rule: 7, eventId: eventId.value, vcontent: '请立即确认响应' })
   pending.forEach((r) => { r.state = '已接通' })
   store.addSceneRoleLog({ step: '05', role: '值班员', action: `对 ${pending.length} 名未确认人员电话重呼`, system: '补呼及人工确认记录（模拟接通）' })
   ElMessage.success('电话重呼已下发')
