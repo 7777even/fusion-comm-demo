@@ -2,8 +2,8 @@
 import { computed, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Warning, Search, Bell, CircleCheck } from '@element-plus/icons-vue'
-import { fcPost } from '@/api/client'
-import { EP, SOS_EVENT_TYPES } from '@/api/endpoints'
+import { communicationApi as api } from '@/services/communication'
+import { SOS_EVENT_TYPES } from '@/api/endpoints'
 import { uuid } from '@/api/sign'
 import { useCommStore } from '@/stores/comm'
 import type { CallRecordItem } from '@/types'
@@ -23,7 +23,7 @@ const eventTypeOptions = Object.entries(SOS_EVENT_TYPES).map(([k, v]) => ({ valu
 
 async function triggerSos() {
   const id = uuid()
-  await fcPost(EP.sosAdd, {
+  await api.sosAdd({
     area: area.value,
     eventId: id,
     eventTime: new Date().toISOString().slice(0, 19).replace('T', ' '),
@@ -42,7 +42,7 @@ async function triggerSos() {
 }
 
 async function confirmAlarm(id: string) {
-  await fcPost(EP.sosConfirm, { eventId: id })
+  await api.sosConfirm({ eventId: id })
   const a = pendingAlarms.value.find((x) => x.id === id)
   if (a) a.confirmed = true
   ElMessage.success('报警已确认')
@@ -60,7 +60,7 @@ const summaryMap = ref<Record<string, string>>({})
 
 async function searchRecords() {
   searched.value = true
-  const res = await fcPost<CallRecordItem>(EP.recordsQuery, {
+  const res = await api.recordsQuery({
     callerNum: qCaller.value, destination: qDest.value,
     startTime: '', endTime: '', pageNum: 1, pageSize: 50
   })
@@ -77,12 +77,12 @@ const filteredRecords = computed(() => {
 })
 
 async function doAsr(row: CallRecordItem) {
-  await fcPost(EP.recordAsr, { macType: 1, filePath: row.url, cdrUuid: row.url.match(/_([0-9a-f-]{36})/)?.[1] ?? uuid() })
+  await api.recordAsr({ macType: 1, filePath: row.url, cdrUuid: row.url.match(/_([0-9a-f-]{36})/)?.[1] ?? uuid() })
   ElMessage.success('转写任务已提交，演示数据中已附转写文本')
 }
 async function doSummary(row: CallRecordItem) {
-  const res = await fcPost<string>(EP.recordStartSummary, { cdrUuid: row.url })
-  await fcPost(EP.recordGetSummaryStatus, { taskId: String(res.data) })
+  const res = await api.recordStartSummary({ cdrUuid: row.url })
+  await api.recordGetSummaryStatus({ taskId: String(res.data) })
   summaryMap.value[row.url] = row.summary ?? '摘要生成完成'
   ElMessage.success('摘要已生成')
 }

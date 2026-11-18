@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { VideoPlay, Refresh, Plus, Minus, Setting } from '@element-plus/icons-vue'
-import { fcPost } from '@/api/client'
+import { communicationApi as api } from '@/services/communication'
 import { EP } from '@/api/endpoints'
 import { mockBroadcastGroups } from '@/api/mock/data'
 import type { BroadcastGroup } from '@/types'
@@ -30,12 +30,12 @@ const typeOptions = [
 ]
 
 async function loadGroups() {
-  const res = await fcPost<BroadcastGroup>(EP.syncBroadcastGroup, { ddtId: 0, validOnly: 1, pageNum: 1, pageSize: 50 })
+  const res = await api.syncBroadcastGroup({ ddtId: 0, validOnly: 1, pageNum: 1, pageSize: 50 })
   groups.value = (res.rows as unknown as BroadcastGroup[]) ?? mockBroadcastGroups
   await loadMembers()
 }
 async function loadMembers() {
-  const res = await fcPost<string>(EP.syncBroadcastTerminals, { ddtId: 0, groupIndex: selectedIndex.value })
+  const res = await api.syncBroadcastTerminals({ ddtId: 0, groupIndex: selectedIndex.value })
   members.value = String(res.data ?? '')
 }
 
@@ -46,7 +46,7 @@ function onGroupChange() {
 async function start() {
   if (!content.value.trim()) return ElMessage.warning('请输入广播内容')
   broadcasting.value = true
-  await fcPost(EP.startTtsTask, {
+  await api.broadcastCommand(EP.startTtsTask, {
     groupId: `BG#${selectedIndex.value}`,
     vcontentType: contentType.value,
     vcontent: content.value,
@@ -56,13 +56,13 @@ async function start() {
   setTimeout(() => { broadcasting.value = false }, 3000)
 }
 async function stop() {
-  await fcPost(EP.stopTask, { groupId: `BG#${selectedIndex.value}` })
+  await api.broadcastCommand(EP.stopTask, { groupId: `BG#${selectedIndex.value}` })
   broadcasting.value = false
 }
 async function changeVolume(delta: number) {
   const ep = delta > 0 ? EP.incVolume : delta < 0 ? EP.decVolume : EP.setVolume
   volume.value = Math.max(0, Math.min(100, volume.value + delta))
-  await fcPost(ep, { groupId: `BG#${selectedIndex.value}`, volume: volume.value })
+  await api.broadcastCommand(ep, { groupId: `BG#${selectedIndex.value}`, volume: volume.value })
 }
 function quickTts(text: string) {
   content.value = text

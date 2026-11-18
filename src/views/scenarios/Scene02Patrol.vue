@@ -2,8 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { VideoCamera, Phone } from '@element-plus/icons-vue'
-import { fcPost } from '@/api/client'
-import { EP } from '@/api/endpoints'
+import { communicationApi as api } from '@/services/communication'
 import { useCommStore } from '@/stores/comm'
 import { SCENE_BY_PATH } from '@/scenes/meta'
 import ScenarioShell from '@/components/scenario/ScenarioShell.vue'
@@ -20,8 +19,8 @@ const evidenceUploaded = ref<Record<string, boolean>>({})
 
 onMounted(async () => {
   const [camRes, taskRes] = await Promise.all([
-    fcPost('__scene__/cameras'),
-    fcPost('__scene__/patchTasks')
+    api.sceneCameras(),
+    api.scenePatchTasks()
   ])
   cameras.value = (camRes.rows as typeof cameras.value) ?? []
   tasks.value = (taskRes.rows as PatchTask[]) ?? []
@@ -34,14 +33,14 @@ const trackPoints = [
 
 async function pointCamera() {
   const camId = selectedCamera.value || cameras.value[0]?.cameraId || 'CAM-KQ-01'
-  const res = await fcPost(EP.previewUrl, { camList: [camId], protocol: 'hls' })
+  const res = await api.previewUrl({ camList: [camId], protocol: 'hls' })
   preview.value = String((res.data as { url?: string })?.url ?? '')
   store.addSceneRoleLog({ step: '02', role: '园区值班员', action: '调取罐区监控点播', system: `取流地址：${preview.value || '（模拟）'}` })
   ElMessage.success('监控点播已发起')
 }
 
 async function callPatrol() {
-  await fcPost(EP.terminalOperator, { action: 1, sourCaller: '9000', destCalled: ['9102'] })
+  await api.terminalOperator({ action: 1, sourCaller: '9000', destCalled: ['9102'] })
   store.addSceneRoleLog({ step: '03', role: '园区值班员', action: '点呼巡查员 9102', system: '通信记录已生成' })
   ElMessage.success('巡查员点呼已下发')
 }

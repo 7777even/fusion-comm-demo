@@ -2,8 +2,8 @@
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Phone, PhoneFilled, VideoCamera, Mic, Mute, Switch, Delete } from '@element-plus/icons-vue'
-import { fcPost } from '@/api/client'
-import { EP, PHONE_ACTION } from '@/api/endpoints'
+import { communicationApi as api } from '@/services/communication'
+import { PHONE_ACTION } from '@/api/endpoints'
 import { mockWalkieTalkies } from '@/api/mock/data'
 import type { Region, Terminal } from '@/types'
 import { useCommStore } from '@/stores/comm'
@@ -23,11 +23,11 @@ const termName = (id: string) => terminals.value.find((t) => t.terminalId === id
 const callEvents = computed(() => store.events.filter((e) => e.cmd === 'callRecord').slice(0, 12))
 
 async function loadRegions() {
-  const res = await fcPost<Region>(EP.queryRegions, { ddtId: 0, pageNum: 1, pageSize: 50 })
+  const res = await api.queryRegions({ ddtId: 0, pageNum: 1, pageSize: 50 })
   regions.value = (res.rows as unknown as Region[]) ?? []
 }
 async function loadTerminals() {
-  const res = await fcPost<Terminal>(EP.queryTerminals, {
+  const res = await api.queryTerminals({
     ddtId: 0, regionId: selectedRegion.value, pageNum: 1, pageSize: 100
   })
   terminals.value = (res.row as unknown as Terminal[]) ?? []
@@ -45,7 +45,7 @@ async function operate(action: number, targets: string[], note?: string) {
   }
   loading.value = true
   try {
-    await fcPost(EP.terminalOperator, {
+    await api.terminalOperator({
       action,
       sourCaller: '9000',
       destCalled: targets,

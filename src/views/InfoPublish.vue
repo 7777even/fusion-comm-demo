@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Promotion, Bell } from '@element-plus/icons-vue'
-import { fcPost } from '@/api/client'
-import { EP, LINK_RULE } from '@/api/endpoints'
+import { communicationApi as api } from '@/services/communication'
+import { LINK_RULE } from '@/api/endpoints'
 import { mockSmsTemplates, mockTerminals } from '@/api/mock/data'
 import { uuid } from '@/api/sign'
 import { simulateSmsLifecycle } from '@/api/mock/eventStream'
@@ -39,7 +39,7 @@ async function sendSms() {
   }
   store.addSmsTask(task)
 
-  await fcPost(EP.linkTaskSend, {
+  await api.linkTaskSend({
     mobile: smsTarget.value,
     rule: 2,
     eventId: id,
@@ -59,7 +59,7 @@ async function sendSms() {
       async () => {
         store.updateSmsTask(id, { state: 'escalated', escalateAt: new Date().toLocaleTimeString('zh-CN', { hour12: false }) })
         // 未回复 → 自动调用语音通讯调度服务（电话呼叫 rule=7）
-        await fcPost(EP.linkTaskSend, {
+        await api.linkTaskSend({
           mobile: smsTarget.value,
           rule: 7,
           eventId: uuid(),
@@ -93,13 +93,13 @@ const scopeOptions = [
 
 async function pushNotice() {
   if (!noticeContent.value.trim()) return ElMessage.warning('请输入公告内容')
-  await fcPost(EP.linkTaskSend, {
+  await api.linkTaskSend({
     mobile: noticeScope.value,
     rule: 4,
     eventId: uuid(),
     scontent: `${noticeTitle.value}：${noticeContent.value}`
   })
-  await fcPost(EP.appEventReport, {
+  await api.appEventReport({
     cmd: 'app', action: 'message_post', uuid: uuid(),
     report_account: '9000', report_time: Date.now(),
     message_data: {
