@@ -1,4 +1,4 @@
-/** 八大业务场景元数据与领域类型 */
+/** 业务场景元数据与领域类型（Demo 保留前 5 个场景） */
 
 export interface SceneCard {
   roles: string
