@@ -38,4 +38,4 @@
 ## 证据
 
 - 浏览器实证脚本：`.git/sdd/verify-mock-mode.mjs`（git 内部临时文件，不入库）。
-- 各任务 review 包与报告：`.git/sdd/review-*.diff`、`.git/sdd/task-*-report.md`（不入库）。
+- 各任务 review 包与报告：`.git/sdd/review-*.diff`、`.git/sdd/task-1-report.md` ~ `task-4-report.md`（本分支；不入库）。注：`.git/sdd/task-5-report.md` 为上一变更遗留文件，与本分支无关；Task 5 的验收以整支审查为准。
