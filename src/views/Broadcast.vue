@@ -164,5 +164,5 @@ onMounted(loadGroups)
 <style scoped>
 .bc-groups { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
 .bc-group-btn { text-align: left; height: auto !important; padding: 10px 12px !important; }
-.bc-group-btn :deep(.el-radio-button__inner) { width: 100%; box-shadow: none !important; border-radius: 6px !important; border: 1px solid var(--fc-border) !important; }
+.bc-group-btn :deep(.el-radio-button__inner) { width: 100%; box-shadow: none !important; border-radius: var(--radius-md) !important; border: 1px solid var(--glass-border) !important; }
 </style>
