@@ -8,6 +8,14 @@ const store = useCommStore()
 const chartEl = ref<HTMLElement | null>(null)
 let chart: echarts.ECharts | null = null
 
+const cssVar = (name: string) => {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+  const modernRgb = raw.match(/^rgb\(\s*(\d+)\s+(\d+)\s+(\d+)\s*\/\s*([\d.]+)(%)?\s*\)$/)
+  if (!modernRgb) return raw
+  const alpha = modernRgb[5] ? Number(modernRgb[4]) / 100 : modernRgb[4]
+  return `rgba(${modernRgb[1]},${modernRgb[2]},${modernRgb[3]},${alpha})`
+}
+
 const onlineCount = computed(() => mockTerminals.filter((t) => t.status === 1).length)
 const recentEvents = computed(() => store.events.slice(0, 7))
 
@@ -15,30 +23,35 @@ function renderChart() {
   if (!chartEl.value) return
   chart = chart ?? echarts.init(chartEl.value)
   const buckets = [6, 9, 12, 15, 18, 21]
+  const text = cssVar('--color-text-muted')
+  const grid = cssVar('--color-border')
+  const accent = cssVar('--color-accent')
+  const success = cssVar('--color-success')
+  const warning = cssVar('--color-warning')
   chart.setOption({
     backgroundColor: 'transparent',
     tooltip: { trigger: 'axis' },
     legend: {
       data: ['语音呼叫', '广播', '联动告警'],
-      textStyle: { color: '#8ea2c4' },
+      textStyle: { color: text },
       top: 0
     },
     grid: { left: 36, right: 16, top: 36, bottom: 24 },
     xAxis: {
       type: 'category',
       data: buckets.map((h) => `${h}:00`),
-      axisLine: { lineStyle: { color: '#26365c' } },
-      axisLabel: { color: '#8ea2c4' }
+      axisLine: { lineStyle: { color: grid } },
+      axisLabel: { color: text }
     },
     yAxis: {
       type: 'value',
-      splitLine: { lineStyle: { color: '#26365c', type: 'dashed' } },
-      axisLabel: { color: '#8ea2c4' }
+      splitLine: { lineStyle: { color: grid, type: 'dashed' } },
+      axisLabel: { color: text }
     },
     series: [
-      { name: '语音呼叫', type: 'line', smooth: true, data: [12, 18, 9, 24, 16, 20], itemStyle: { color: '#3d8bff' }, areaStyle: { color: 'rgba(61,139,255,.15)' } },
-      { name: '广播', type: 'bar', data: [3, 5, 2, 8, 4, 6], itemStyle: { color: '#00d4a0' } },
-      { name: '联动告警', type: 'bar', data: [1, 0, 2, 1, 3, 1], itemStyle: { color: '#ffb020' } }
+      { name: '语音呼叫', type: 'line', smooth: true, data: [12, 18, 9, 24, 16, 20], itemStyle: { color: accent }, areaStyle: { color: cssVar('--color-accent-faint') } },
+      { name: '广播', type: 'bar', data: [3, 5, 2, 8, 4, 6], itemStyle: { color: success } },
+      { name: '联动告警', type: 'bar', data: [1, 0, 2, 1, 3, 1], itemStyle: { color: warning } }
     ]
   })
 }
@@ -120,10 +133,10 @@ watch(() => store.events.length, renderChart)
     <div class="panel">
       <h3 class="panel-title">模块能力（基于申讯 OpenAPI V1.3）</h3>
       <el-row :gutter="12">
-        <el-col :span="6"><div class="call-stage"><b>电话调度</b><div class="mini muted" style="margin-top:8px">一键直通 · 多方会议 · 强插强拆监听</div><div class="endpoint-note" style="margin-top:8px">terminalOperator</div></div></el-col>
-        <el-col :span="6"><div class="call-stage"><b>扩音广播</b><div class="mini muted" style="margin-top:8px">指定区域 · TTS 喊话 · 音量控制</div><div class="endpoint-note" style="margin-top:8px">broadcast/*</div></div></el-col>
-        <el-col :span="6"><div class="call-stage"><b>信息发布</b><div class="mini muted" style="margin-top:8px">短信 · 未回复语音升级 · 公告</div><div class="endpoint-note" style="margin-top:8px">linkTask/send</div></div></el-col>
-        <el-col :span="6"><div class="call-stage"><b>应急联动检索</b><div class="mini muted" style="margin-top:8px">一键报警 · 录音转写检索</div><div class="endpoint-note" style="margin-top:8px">sosLinkage · records</div></div></el-col>
+        <el-col :span="6"><div class="call-stage"><b>电话调度</b><div class="mini muted" style="margin-top:var(--space-sm)">一键直通 · 多方会议 · 强插强拆监听</div><div class="endpoint-note" style="margin-top:var(--space-sm)">terminalOperator</div></div></el-col>
+        <el-col :span="6"><div class="call-stage"><b>扩音广播</b><div class="mini muted" style="margin-top:var(--space-sm)">指定区域 · TTS 喊话 · 音量控制</div><div class="endpoint-note" style="margin-top:var(--space-sm)">broadcast/*</div></div></el-col>
+        <el-col :span="6"><div class="call-stage"><b>信息发布</b><div class="mini muted" style="margin-top:var(--space-sm)">短信 · 未回复语音升级 · 公告</div><div class="endpoint-note" style="margin-top:var(--space-sm)">linkTask/send</div></div></el-col>
+        <el-col :span="6"><div class="call-stage"><b>应急联动检索</b><div class="mini muted" style="margin-top:var(--space-sm)">一键报警 · 录音转写检索</div><div class="endpoint-note" style="margin-top:var(--space-sm)">sosLinkage · records</div></div></el-col>
       </el-row>
     </div>
   </div>
