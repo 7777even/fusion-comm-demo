@@ -1,7 +1,7 @@
 # 复盘：融合通信 Demo 产品化落地（阶段一）
 
 - 日期：2026-11-18
-- 分支：`feature/fusion-comm-productization`，基线 `7a4a83f`，7 次任务提交至 `6da6da3`
+- 分支：`feature/fusion-comm-productization`，起点 `7a4a83f`，HEAD `32d5fdb`（8 个提交：6 个实现/验收 + 归档与 retro 各 1）
 - 定位：从平台抽一部分能力做成贴近系统规范的 demo 案例，验证成功后回流系统。本阶段只做 demo 仓的「贴近系统」部分。
 
 ## 做对了什么

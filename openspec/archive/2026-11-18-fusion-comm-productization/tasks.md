@@ -13,9 +13,9 @@
 
 - [x] 新增 `src/services/communication.ts`，消费统一 client，按 B3 包络 `unwrapBody` 形态组织；保留 mock 适配器分支。
 - [x] [TDD] 写包络解包单测：`scripts/test-envelope.mjs`（包络解包、`code!=0` 抛错、`EMPTY_BODY`、rows/row 双形态）；服务层为薄封装，TDD 落在可测纯函数 `envelope.ts`。
-- [x] 新增 `src/adapters/fcSignature.ts`，把 `sign.ts` 的申讯签名从浏览器直连路径迁出，声明为回流后后端代理职责，demo 仅在 real 演示态沿用。
-- [x] [TDD] 写签名与代理边界单测，断言真实模式 `useProxy=true` 返回空头、不读浏览器密钥。
-- [x] 5 个基础能力页 + 5 个场景页改走 `services/communication`，去除页面内直接 `fcPost`（9 页 38 处，零残留）。
+- [x] 新增 `src/adapters/fcSignature.ts`，声明「回流后由后端代理生成签名、浏览器零密钥」边界；当前 demo 真实模式仍由 `client.ts` 走 `sign.ts` 直连签名，适配器为阶段三契约载体、未接入运行路径。
+- [x] [TDD] 写签名与代理边界单测，断言 `useProxy=true` 时 `createProxyAwareSigner` 返回空头、不读浏览器密钥。
+- [x] 4 个基础能力页 + 5 个场景页改走 `services/communication`，去除页面内直接 `fcPost`（9 页 38 处，零残留；Dashboard 无 fcPost 未改）。
 - [ ] 契约对齐：按 design 表格为 demo mock 返回补平台字段形状，标注与 `communication.openapi.json` 的差异点。**移交阶段二**：契约真源在脚手架仓，本仓不做字段形状改造；差异点已在 `design.md` §契约改造范围列表记录。
 - [x] 守门：`npm run build`（含 vue-tsc）通过，Playwright 走通 10 项导航与 5 场景关键路径（LIVE 行 1/2/3/3/4，零页面错误）。
 

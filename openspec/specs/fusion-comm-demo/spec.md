@@ -2,7 +2,7 @@
 
 融合通信 Demo 贴近平台契约与硬控规范的能力基线。本 spec 由 `2026-11-18-fusion-comm-productization` 变更回填，覆盖阶段一（demo 仓）已落地的三条需求；阶段二/三（脚手架契约、后端受控下行）在各自 Change 中扩展。
 
-> 实现精化说明：下列场景相对已批准的 `spec-delta.md` 做了措辞明确化（载荷显式列出 `data/rows/row`、`unwrap*` 抛错路径、`useProxy=true` 条件、`boundaryNote` 落点），语义与 acceptance 条件一致，未新增或删减需求。
+> 阶段状态说明：下列场景逐字沿用已批准的 `spec-delta.md`，未收紧前提、未改变 acceptance。阶段一（demo 仓）只完成服务层收口与签名边界声明；「浏览器零密钥」与「端到端统一解包」为阶段二/三目标，当前尚未满足，详见各 Scenario 的阶段标注。
 
 ## ADDED Requirements
 
@@ -13,12 +13,14 @@ Demo 的能力须以平台 `communication.openapi.json` 为契约参照组织服
 #### Scenario: 服务层按 B3 包络解包
 
 - **WHEN** 页面经 `services/communication` 调用任一能力且响应 `code=0`
-- **THEN** 服务层返回 `data`/`rows`/`row` 载荷，`code!=0` 时 `unwrapBody`/`unwrapRows` 抛出可识别错误，页面不直接处理原始包络
+- **THEN** 服务层返回 `data` 载荷，`code!=0` 时 `unwrapBody`/`unwrapRows` 提供可识别错误路径
+- **阶段状态**：阶段一服务层原样返回包络、页面仍读 `res.rows/res.row/res.data`；`unwrap*` 提供错误路径但端到端接入在阶段二随 generated types 统一完成。
 
 #### Scenario: 真实模式不外泄密钥
 
-- **WHEN** demo 处于 real 演示态且签名适配器 `useProxy=true`
-- **THEN** 浏览器请求头不含 `secretId/secretKey`，申讯签名由后端代理生成的声明在 `fcSignature.ts` 的 `boundaryNote` 中可追溯
+- **WHEN** demo 处于 real 演示态
+- **THEN** 浏览器请求头不含 `secretId/secretKey`，申讯签名由后端代理生成
+- **阶段状态**：阶段一仅以 `fcSignature.ts` 的 `boundaryNote` 声明该回流边界；真实模式当前仍由 `client.ts` 走 `sign.ts` 直连签名，零密钥由阶段三的后端代理实现。
 
 ### Requirement: 受控下行白名单与消防硬控隔离
 

@@ -2,8 +2,8 @@
 
 - 日期：2026-11-18
 - 分支：`feature/fusion-comm-productization`（分支起点 `7a4a83f`，本验收任务直接基线 `92e9b95`）
-- 提案：`openspec/changes/2026-11-18-fusion-comm-productization/`
-- 计划：`docs/superpowers/plans/2026-11-18-fusion-comm-productization.md`
+- 提案：`openspec/archive/2026-11-18-fusion-comm-productization/`（归档后路径）
+- 计划：`openspec/archive/2026-11-18-fusion-comm-productization/plan.md`（归档后路径）
 - 范围：demo 贴近系统规范（服务层收口 + 签名边界声明），不含回流脚手架/后端的实现。
 
 ## 验证手段与结果
@@ -39,7 +39,7 @@
 ## 交付物
 
 - `src/services/envelope.ts`：B3 包络解包纯函数（零导入）。
-- `src/adapters/fcSignature.ts`：签名边界适配器，声明回流后由后端代理生成、浏览器零密钥。
+- `src/adapters/fcSignature.ts`：签名边界适配器，声明回流后由后端代理生成、浏览器零密钥；为阶段三契约载体，当前未接入运行路径，真实模式仍走 `sign.ts` 直连。
 - `src/services/communication.ts`：22 个方法的服务层，收口全部页面直连。
 - 9 个页面（4 基础 + 5 场景）改走服务层。
 - 2 个测试脚本 + 本验收记录。
