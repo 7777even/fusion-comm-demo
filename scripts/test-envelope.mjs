@@ -12,4 +12,5 @@ assert.deepEqual(
   unwrapRows({ code: 0, msg: 'ok', row: [3], total: 1 }),
   { rows: [3], total: 1 }
 )
+assert.throws(() => unwrapRows({ code: 1, msg: 'bad rows' }), /bad rows/)
 console.log('envelope OK')

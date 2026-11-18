@@ -24,7 +24,7 @@ export const communicationApi = {
   // 广播
   syncBroadcastGroup: (p: Params = {}) => fcPost(EP.syncBroadcastGroup, p),
   syncBroadcastTerminals: (p: Params = {}) => fcPost(EP.syncBroadcastTerminals, p),
-  syncSmsTemplateList: () => fcPost(EP.syncSmsTemplateList, {}),
+  syncSmsTemplateList: () => fcPost(EP.syncSmsTemplateList, {}), // 阶段二预留：当前页面未引用
   broadcastCommand: (ep: string, p: Params) => fcPost(ep, p),
   // 电话 / 会议（受控下行业务入口，回流后由后端代理签名）
   terminalOperator: (p: Params) => fcPost(EP.terminalOperator, p),
@@ -35,7 +35,7 @@ export const communicationApi = {
   sosConfirm: (p: Params) => fcPost(EP.sosConfirm, p),
   // App
   appEventReport: (p: Params) => fcPost(EP.appEventReport, p),
-  // 事件订阅
+  // 事件订阅（阶段二预留：回流后改由平台 WS 回推，当前页面未引用）
   eventSubscription: (p: Params) => fcPost(EP.eventSubscription, p),
   eventUnSubscription: (p: Params) => fcPost(EP.eventUnSubscription, p),
   // 场景拟真数据（mock 专用路径，回流时替换为后端端点）
