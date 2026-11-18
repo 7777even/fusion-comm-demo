@@ -24,9 +24,9 @@ function toEnterprise(r: Region): Enterprise {
   }
 }
 
-type CameraRow = { camIndex?: string; name?: string; status?: number; linkType?: number }
+type CameraRow = { camIndex?: string; cameraId?: string; name?: string; status?: number; linkType?: number }
 function toCamera(c: CameraRow) {
-  return { cameraId: c.camIndex ?? '', name: c.name ?? '', status: c.status ?? c.linkType ?? 0 }
+  return { cameraId: c.camIndex ?? c.cameraId ?? '', name: c.name ?? '', status: c.status ?? c.linkType ?? 0 }
 }
 
 function toPatchTask(r: CallRecordItem, i: number): PatchTask {
@@ -75,7 +75,7 @@ export const communicationApi = {
   // 事件订阅（阶段二预留：回流后改由平台 WS 回推，当前页面未引用）
   eventSubscription: (p: Params) => fcPost(EP.eventSubscription, p),
   eventUnSubscription: (p: Params) => fcPost(EP.eventUnSubscription, p),
-  // 场景数据：真实接口 + 字段适配（mock 回退态由 handler.ts 提供 __scene__/*）
+  // 场景数据：真实接口 + 字段适配（mock 回退态经 EP.* 由 handler.ts 拦截并按同结构返回）
   sceneEnterprises: async () => {
     const res = await fcPost(EP.queryRegions, { pageNum: 1, pageSize: 50 })
     return { ...res, rows: ((res.rows ?? []) as Region[]).map(toEnterprise) }

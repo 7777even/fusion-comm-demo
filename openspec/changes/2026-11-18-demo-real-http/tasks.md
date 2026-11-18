@@ -24,7 +24,7 @@
 - [ ] `src/services/communication.ts`：`sceneEnterprises` 调 `queryRegions({pageNum:1,pageSize:50})` 并映射为完整 `Enterprise`（`regionId→id`、`regionName→name`、`totalTerminals>0→hasTerminal`、`terminals[0]→phone` 否则 `regionId`、`contact='—'`、`lng/lat=0`、`status='未通知'`）。
 - [ ] `src/services/communication.ts`：`sceneCameras` 调 `queryCameras({pageNum:1,pageSize:50})` 并映射 `camIndex→cameraId`、`name→name`、`status??linkType→status`。
 - [ ] `src/services/communication.ts`：`scenePatchTasks` 调 `recordsQuery({pageNum:1,pageSize:50})` 并映射为完整 `PatchTask`（`url→id` 否则拼接、`callType 文案→type`、`callerNum+'→'+destination→location`、`callerNum→monitor`、`status='待核查'`、`evidence=false`）。
-- [ ] mock 分发器 `handler.ts` 保留 `__scene__/*` case 但标注"仅 mock 回退态使用"；真实态不再抵达。
+- [ ] mock 分发器 `handler.ts` 保留 `__scene__/*` case 作为历史兼容（真实态与 mock 回退态均改走 EP.*，不再抵达），标注"保留兼容旧调用"；`toCamera` 兼容 mock handler 返回的 `cameraId` 字段。
 
 ## 4. 场景页面字段消费对齐
 
