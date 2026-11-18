@@ -114,7 +114,7 @@ Expected: **FAIL**（预期，因 router 仍引用已移走的 view 路径）—
 
 ```bash
 git -C "d:\gkproject\fusion-comm-demo" add -A src/components/capabilities src/views
-git -C "d:\gkproject\fusion-comm-demo" commit -m "refactor: 抽出五个基础能力组件到 capabilities 目录"
+git -C "d:\gkproject\fusion-comm-demo" commit -m "feat: 抽出五个基础能力组件到 capabilities 目录"
 ```
 
 ---
