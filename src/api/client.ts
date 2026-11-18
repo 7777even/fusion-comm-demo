@@ -33,7 +33,11 @@ export async function fcPost<T = unknown>(
   if (!resp.ok) {
     throw new Error(`HTTP ${resp.status} ${resp.statusText}`)
   }
-  return (await resp.json()) as ApiResponse<T>
+  const body = (await resp.json()) as ApiResponse<T>
+  if (body.code !== 0) {
+    throw new Error(body.msg || `API_ERROR_${body.code}`)
+  }
+  return body
 }
 
 /** 当前运行模式，供界面角标展示 */
