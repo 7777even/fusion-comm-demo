@@ -13,22 +13,11 @@ const stageTag: Record<ScenarioMeta['stage'], string> = {
   '事后·总结提升': 'success'
 }
 
-const checkedAcceptance = ref<number[]>([])
-const acceptanceProgress = computed(() =>
-  `${checkedAcceptance.value.length}/${props.meta.acceptance.length}`
-)
-
 const roleRows = computed(() => {
   const base = props.meta.roles.map((r) => ({ ...r, live: false }))
   const live = store.sceneRoleLog.map((r) => ({ ...r, live: true }))
   return [...live, ...base]
 })
-
-function toggleAcceptance(i: number) {
-  const idx = checkedAcceptance.value.indexOf(i)
-  if (idx >= 0) checkedAcceptance.value.splice(idx, 1)
-  else checkedAcceptance.value.push(i)
-}
 </script>
 
 <template>
@@ -120,31 +109,6 @@ function toggleAcceptance(i: number) {
           </el-table>
         </div>
       </el-tab-pane>
-
-      <el-tab-pane label="合同边界" name="boundary">
-        <div class="panel">
-          <h3 class="panel-title">合同及方案依据</h3>
-          <p class="story-p">{{ meta.boundary.basis }}</p>
-          <h3 class="panel-title section-gap">待确认 / 不直接承诺</h3>
-          <el-alert v-for="(item, i) in meta.boundary.pending" :key="i" type="warning" :closable="false" :title="item" class="boundary-alert" />
-        </div>
-      </el-tab-pane>
-
-      <el-tab-pane label="验收建议" name="acceptance">
-        <div class="panel">
-          <div class="page-head">
-            <h3 class="panel-title">场景验收建议</h3>
-            <el-tag type="primary" effect="dark">完成度 {{ acceptanceProgress }}</el-tag>
-          </div>
-          <el-checkbox
-            v-for="(item, i) in meta.acceptance"
-            :key="i"
-            :model-value="checkedAcceptance.includes(i)"
-            class="accept-item"
-            @change="toggleAcceptance(i)"
-          >{{ item }}</el-checkbox>
-        </div>
-      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -158,6 +122,4 @@ function toggleAcceptance(i: number) {
 .flow-step { display: flex; align-items: flex-start; gap: var(--space-sm); padding: var(--space-sm); background: var(--color-panel-soft); border-radius: var(--radius-md); border-left: 3px solid var(--color-accent); }
 .flow-no { color: var(--color-accent); font-family: var(--font-family-num); font-weight: 700; }
 .flow-action { flex: 1; font-size: var(--font-size-helper); line-height: 1.5; }
-.boundary-alert { margin-bottom: var(--space-sm); }
-.accept-item { display: block; margin: var(--space-sm) 0; height: auto; color: var(--color-text); }
 </style>
