@@ -55,3 +55,30 @@ Demo 的能力须以平台 `communication.openapi.json` 为契约参照组织服
 - 阶段一（本仓）：服务层 + 签名边界 + 9 页收口，已落地验收。
 - 阶段二（脚手架）：契约扩端点、生成类型、`fm-communication` 子应用迁入——另开 Change。
 - 阶段三（后端，L4）：受控下行白名单、三方言迁移、权限种子——另开 Change，须先过白名单端点清单人工确认。
+
+## 本仓增量：默认真实 HTTP 调用链（2026-11-18-demo-real-http）
+
+> 由 `2026-11-18-demo-real-http` 变更回填。两条下行业务边界的声明（浏览器零密钥、受控白名单+审计）仍由阶段二/三承担；本节只描述本仓调用链与场景数据的实际落地状态。
+
+### Requirement: Demo 默认真实 HTTP 调用链
+
+Demo 的 `/openapi/*` 接口调用默认走真实 HTTP，按申讯 V1.3 文档每次请求生成签名头；本地 mock 仅在显式开关下作为回退。
+
+#### Scenario: 默认真实模式
+
+- **WHEN** 未设置 `VITE_FC_MOCK=true`
+- **THEN** `fcPost` 以 `fetch` POST 到 `VITE_FC_BASE_URL + path`，每次请求重算 `X-CR-Signature`，响应 `code !== 0` 时抛错（错误信息含 `msg` 或 `API_ERROR_<code>`）
+
+#### Scenario: 显式 mock 回退
+
+- **WHEN** 设置 `VITE_FC_MOCK=true`（注意须用 `set "VITE_FC_MOCK=true"` 避免 cmd 尾随空格）
+- **THEN** 请求走本地 mock 分发器，顶栏角标显示 MOCK，仓库可离线演示完整场景；浏览器实证无 pageerror
+
+### Requirement: 场景拟真数据映射到真实接口
+
+原本 `__scene__/*` 伪端点提供的企业/摄像头/工单列表，由真实 `/openapi/*` 接口经字段适配提供，页面调用名与字段访问不变。
+
+#### Scenario: 企业/摄像头/工单来自真实接口
+
+- **WHEN** 场景页调用 `sceneEnterprises()` / `sceneCameras()` / `scenePatchTasks()`
+- **THEN** 服务层分别调 `queryRegions` / `queryCameras` / `recordsQuery`，把真实字段映射为满足 `Enterprise` / Camera `{cameraId,name,status}` / `PatchTask` 类型的结构（含 mock 回退态 `cameraId` 兜底），页面字段访问零改动
