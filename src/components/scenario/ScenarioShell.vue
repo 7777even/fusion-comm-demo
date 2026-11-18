@@ -9,8 +9,7 @@ const active = ref('story')
 
 const stageTag: Record<ScenarioMeta['stage'], string> = {
   '平时·日常管理': 'primary',
-  '战时·应急指挥': 'danger',
-  '事后·总结提升': 'success'
+  '战时·应急指挥': 'danger'
 }
 
 const roleRows = computed(() => {

@@ -3,7 +3,7 @@
  * 字段结构严格对齐 OpenAPI 文档返回示例，方便真实模式切换后无缝对接。
  */
 import type { Region, Terminal, BroadcastGroup, CallRecordItem } from '@/types'
-import type { Enterprise, PatchTask, DrillPlan } from '@/types/scenario'
+import type { Enterprise, PatchTask } from '@/types/scenario'
 
 export const mockRegions: Region[] = [
   { regionId: 'R0001', regionName: '茂名石化 · 厂区总调度', parentId: null, totalTerminals: 12, terminals: null, ddtId: 0 },
@@ -121,9 +121,4 @@ export const mockEnterprises: Enterprise[] = [
 export const mockPatchTasks: PatchTask[] = [
   { id: 'P001', type: '一级动火', location: '生产二部 罐区东侧', owner: '东粤化学·张班长', monitor: '9101 危化处置组长', status: '待核查', evidence: false },
   { id: 'P002', type: '二级高处', location: '装卸区 3 号平台', owner: '凯美特·李工', monitor: '9102 巡查员', status: '待核查', evidence: false }
-]
-
-export const mockDrillPlans: DrillPlan[] = [
-  { id: 'D001', name: '危化品储罐泄漏专项演练', type: '危化品泄漏', location: '罐区 T-203', units: ['广石化', '吉化', '消防救援队'], status: '未开始' },
-  { id: 'D002', name: '可燃气体报警桌面推演', type: '可燃气报警', location: '生产一部', units: ['东粤化学', '园区应急办'], status: '未开始' }
 ]

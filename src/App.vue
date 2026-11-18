@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 import {
   DataBoard, Phone, VideoPlay, Promotion, Warning, Connection,
   Bell, ArrowDown, Calendar, Location, WarningFilled, VideoCamera,
-  MapLocation, Message, Document, Monitor
+  MapLocation
 } from '@element-plus/icons-vue'
 import { isMockMode } from '@/api/client'
 import { useCommStore } from '@/stores/comm'
@@ -38,15 +38,7 @@ const groups = [
     items: [
       { path: '/scene/03-report', title: '多渠道接报与应急响应启动', icon: WarningFilled },
       { path: '/scene/04-consult', title: '跨网异构多方视频会商', icon: VideoCamera },
-      { path: '/scene/05-gis', title: '二三维GIS融合调度', icon: MapLocation },
-      { path: '/scene/06-notify', title: '周边企业协同通知与避险', icon: Message }
-    ]
-  },
-  {
-    title: '事后·总结提升',
-    items: [
-      { path: '/scene/07-review', title: '应急处置全链路复盘', icon: Document },
-      { path: '/scene/08-drill', title: '三维数字化协同演练', icon: Monitor }
+      { path: '/scene/05-gis', title: '二三维GIS融合调度', icon: MapLocation }
     ]
   }
 ]

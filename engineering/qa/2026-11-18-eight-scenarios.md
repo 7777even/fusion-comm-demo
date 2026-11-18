@@ -1,9 +1,11 @@
-# 八大业务场景 — 验收记录
+# 业务场景 — 验收记录
 
 - 日期：2026-11-18
 - 设计：`docs/superpowers/specs/2026-11-18-eight-scenarios-design.md`
 - 计划：`docs/superpowers/plans/2026-11-18-eight-scenarios.md`
-- 环境：Vite dev server `http://localhost:5191`，Playwright Chromium 159，viewport 1440×900
+- 环境：Vite dev server `http://localhost:5191`（初验）/ `http://localhost:5188`（缩减后复验），Playwright Chromium 159，viewport 1440×900
+
+> **范围变更（2026-11-18）**：按用户要求，Demo 最终只保留前 5 个场景（01-05），场景 06/07/08 及其路由、导航、元数据、mock 数据已移除。本文下方的 8 场景表格为历史初验记录，缩减后复验结论见文末「范围缩减复验」。
 
 ## 验证手段
 
@@ -44,3 +46,22 @@
 ## 结论
 
 8/8 场景交付完成，构建通过、实证零页面错误，验收通过。
+
+---
+
+## 范围缩减复验（2026-11-18）
+
+按用户要求，最终 Demo 只保留场景 01-05，删除 06/07/08。
+
+**改动**：
+- 删除 `Scene06Notify.vue` / `Scene07Review.vue` / `Scene08Drill.vue`
+- `meta.ts` 移除 scene06/07/08 定义，`SCENES` 只含 5 项
+- `router/index.ts` 移除 3 条路由，新增 `/(.*)*` 兜底重定向到 `/dashboard`
+- `App.vue` 移除「事后·总结提升」分组及相关图标，导航变为 3 组 10 项
+- `types/scenario.ts` 移除 `事后·总结提升` stage 与 `DrillPlan` 类型
+- mock 层移除 `mockDrillPlans` 与 `__scene__/drillPlans` case
+
+**复验结果**：
+- `npm run build`：BUILD SUCCESS（8.75s）
+- Playwright：侧边栏 3 组 10 项，页面标题正确，零页面错误
+- 旧场景 URL（`/scene/06-notify`、`07-review`、`08-drill`）均重定向到 `#/dashboard`，无空白页

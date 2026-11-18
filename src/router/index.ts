@@ -12,9 +12,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/scene/03-report', name: 'scene03', component: () => import('@/views/scenarios/Scene03Report.vue'), meta: { title: '多渠道接报与应急响应启动' } },
   { path: '/scene/04-consult', name: 'scene04', component: () => import('@/views/scenarios/Scene04Consult.vue'), meta: { title: '跨网异构多方视频会商' } },
   { path: '/scene/05-gis', name: 'scene05', component: () => import('@/views/scenarios/Scene05Gis.vue'), meta: { title: '二三维GIS融合调度' } },
-  { path: '/scene/06-notify', name: 'scene06', component: () => import('@/views/scenarios/Scene06Notify.vue'), meta: { title: '周边企业协同通知与避险' } },
-  { path: '/scene/07-review', name: 'scene07', component: () => import('@/views/scenarios/Scene07Review.vue'), meta: { title: '应急处置全链路复盘' } },
-  { path: '/scene/08-drill', name: 'scene08', component: () => import('@/views/scenarios/Scene08Drill.vue'), meta: { title: '三维数字化协同演练' } }
+  { path: '/:pathMatch(.*)*', redirect: '/dashboard' }
 ]
 
 export default createRouter({ history: createWebHashHistory(), routes })

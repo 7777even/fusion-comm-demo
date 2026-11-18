@@ -10,7 +10,7 @@ import type { ApiResponse } from '../client'
 import {
   mockRegions, mockTerminals, mockWalkieTalkies, mockBroadcastGroups,
   mockBroadcastMembers, mockCallRecords, mockSmsTemplates,
-  mockEnterprises, mockPatchTasks, mockDrillPlans
+  mockEnterprises, mockPatchTasks
 } from './data'
 
 const ok = (data?: unknown, extra: Record<string, unknown> = {}): ApiResponse => ({
@@ -225,9 +225,6 @@ export async function mockRequest(
 
     case '__scene__/patchTasks':
       return ok(undefined, { total: mockPatchTasks.length, rows: mockPatchTasks })
-
-    case '__scene__/drillPlans':
-      return ok(undefined, { total: mockDrillPlans.length, rows: mockDrillPlans })
 
     default:
       return ok()
