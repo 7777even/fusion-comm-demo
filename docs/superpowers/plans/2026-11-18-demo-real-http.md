@@ -135,6 +135,7 @@ git commit -m "fix: 真实模式响应业务码非0时抛出可读错误"
 
 **Files:**
 - Modify: `src/services/communication.ts:12-45`
+- Modify: `src/api/mock/handler.ts:214-227`（仅加注释标注 mock 回退态专用）
 
 **Interfaces:**
 - Consumes: `fcPost`（client.ts）、`EP`（endpoints.ts）、`ApiResponse`（client.ts）
@@ -145,9 +146,9 @@ git commit -m "fix: 真实模式响应业务码非0时抛出可读错误"
 在文件顶部 import 后新增：
 ```ts
 import type { Enterprise, PatchTask } from '../types/scenario.ts'
-import type { Region, Camera, CallRecordItem } from '../types/index.ts'
+import type { Region, CallRecordItem } from '../types/index.ts'
 ```
-（若 `../types/index.ts` 未导出 `Camera`，改用实际导出名；以 `src/types/index.ts` 现有 `Region` / `Terminal` / `CallRecordItem` 为准，Camera 用内联类型 `CameraRow = { camIndex?: string; name?: string; status?: number; linkType?: number }`。）
+（`../types/index.ts` 只导出 `Region` / `CallRecordItem`，不导出 `Camera`；监控点用下方内联类型 `CameraRow = { camIndex?: string; name?: string; status?: number; linkType?: number }`。）
 
 在 `communicationApi` 定义之前新增三个适配函数：
 ```ts
