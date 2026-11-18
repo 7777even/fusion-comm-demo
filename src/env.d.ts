@@ -7,6 +7,7 @@ declare module '*.vue' {
 }
 
 interface ImportMetaEnv {
+  readonly VITE_FC_MOCK?: string
   readonly VITE_FC_BASE_URL?: string
   readonly VITE_FC_WS_URL?: string
   readonly VITE_FC_SECRET_ID?: string
