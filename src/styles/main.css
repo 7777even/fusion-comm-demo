@@ -59,7 +59,39 @@ html, body, #app { height: 100%; margin: 0; }
   border-color: var(--color-danger);
   color: var(--color-text-strong);
 }
+.el-button--success {
+  background: color-mix(in srgb, var(--color-success) 70%, transparent);
+  border-color: var(--color-success);
+  color: var(--color-text-strong);
+}
+.el-button--success:hover { filter: brightness(1.15); }
 .el-tag { border-radius: var(--radius-sm); }
+.el-tree {
+  --el-tree-node-hover-bg-color: var(--color-accent-soft);
+  --el-tree-text-color: var(--color-text);
+  background: transparent !important;
+  color: var(--color-text) !important;
+}
+.el-tree-node__content:hover { background: var(--color-accent-soft) !important; }
+.el-tree-node.is-current > .el-tree-node__content { background: var(--color-accent-soft) !important; }
+.el-alert {
+  --el-alert-bg-color: var(--color-panel-soft);
+  background-color: var(--color-panel-soft) !important;
+  border-color: var(--color-border) !important;
+}
+.el-alert__title, .el-alert__description { color: var(--color-text) !important; }
+.el-input-number {
+  --el-input-number-bg-color: var(--color-panel-soft);
+  --el-fill-color-blank: var(--color-panel-soft);
+}
+.el-input-number__decrease, .el-input-number__increase {
+  background: var(--color-panel-soft) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+}
+.el-slider__runway { background-color: var(--color-border) !important; }
+.el-slider__bar { background-color: var(--color-accent) !important; }
+.el-slider__button { border-color: var(--color-accent) !important; background: var(--color-panel) !important; }
 
 /* 布局 */
 .app-shell { display: flex; height: 100vh; overflow: hidden; }
