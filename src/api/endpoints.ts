@@ -45,8 +45,14 @@ export const EP = {
   eventUnSubscription: '/openapi/eventService/eventUnSubscription',
 
   // 视频联动
+  camerasRegions: '/openapi/cameras/queryRegions',
   cameras: '/openapi/cameras/queryCameras',
-  previewUrl: '/openapi/cameras/getPreviewUrl'
+  previewUrl: '/openapi/cameras/getPreviewUrl',
+
+  // 广播任务管理
+  taskAdd: '/openapi/broadcast/task/add',
+  taskUpdate: '/openapi/broadcast/task/update',
+  taskRemove: '/openapi/broadcast/task/remove'
 } as const
 
 /** 联动规则 rule（文档附录 C） */
