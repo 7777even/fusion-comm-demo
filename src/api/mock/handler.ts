@@ -180,6 +180,24 @@ export async function mockRequest(
     case EP.eventUnSubscription:
       return ok()
 
+    case EP.camerasRegions:
+      return ok(undefined, {
+        data: [
+          { indexCode: 'REG-KQ', name: '罐区' },
+          { indexCode: 'REG-XQ', name: '装卸区' },
+          { indexCode: 'REG-GJ', name: '石化大道卡口' }
+        ]
+      })
+
+    case EP.taskAdd:
+    case EP.taskUpdate:
+      emitEvent({ cmd: 'broadcastTaskStatus', text: `广播任务已${path === EP.taskAdd ? '新增' : '更新'}`, level: 'info', raw: p })
+      return ok(uuid())
+
+    case EP.taskRemove:
+      emitEvent({ cmd: 'broadcastTaskStatus', text: '广播任务已删除', level: 'info', raw: p })
+      return ok()
+
     case EP.cameras:
       return ok(undefined, {
         total: 2,

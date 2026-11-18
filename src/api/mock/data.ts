@@ -3,6 +3,7 @@
  * 字段结构严格对齐 OpenAPI 文档返回示例，方便真实模式切换后无缝对接。
  */
 import type { Region, Terminal, BroadcastGroup, CallRecordItem } from '@/types'
+import type { Enterprise, PatchTask, DrillPlan } from '@/types/scenario'
 
 export const mockRegions: Region[] = [
   { regionId: 'R0001', regionName: '茂名石化 · 厂区总调度', parentId: null, totalTerminals: 12, terminals: null, ddtId: 0 },
@@ -99,4 +100,30 @@ export const mockSmsTemplates = [
   { code: 'SMS_EMERGENCY_01', name: '应急疏散通知', content: '【应急通知】${area}发生${event}，请立即按预案到指定集合点集结。' },
   { code: 'SMS_GAS_01', name: '可燃气体报警', content: '【告警】${area}${device}可燃气体浓度超标，请立即现场确认。' },
   { code: 'SMS_DRILL_01', name: '应急演练通知', content: '【演练】${time}将组织${type}应急演练，请相关人员准时参加。' }
+]
+
+export const mockEnterprises: Enterprise[] = [
+  { id: 'E01', name: '广石化', hasTerminal: true, contact: '陈主任', phone: '8001', lng: 116.5412, lat: 23.1023, status: '未通知' },
+  { id: 'E02', name: '吉化', hasTerminal: true, contact: '李工', phone: '8002', lng: 116.5433, lat: 23.1045, status: '未通知' },
+  { id: 'E03', name: '盛元达', hasTerminal: true, contact: '王经理', phone: '8003', lng: 116.5456, lat: 23.1067, status: '未通知' },
+  { id: 'E04', name: '粤电', hasTerminal: true, contact: '赵值长', phone: '8004', lng: 116.5478, lat: 23.1089, status: '未通知' },
+  { id: 'E05', name: '停车场', hasTerminal: true, contact: '刘班长', phone: '8005', lng: 116.5490, lat: 23.1110, status: '未通知' },
+  { id: 'E06', name: '广州港', hasTerminal: true, contact: '周调度', phone: '8006', lng: 116.5512, lat: 23.1132, status: '未通知' },
+  { id: 'E07', name: '伊斯科', hasTerminal: false, contact: '孙安监', phone: '8007', lng: 116.5534, lat: 23.1154, status: '未通知' },
+  { id: 'E08', name: '东粤化学', hasTerminal: false, contact: '吴工', phone: '8008', lng: 116.5556, lat: 23.1176, status: '未通知' },
+  { id: 'E09', name: '东粤环保', hasTerminal: false, contact: '郑主管', phone: '8009', lng: 116.5578, lat: 23.1198, status: '未通知' },
+  { id: 'E10', name: '凯美特', hasTerminal: false, contact: '冯经理', phone: '8010', lng: 116.5600, lat: 23.1210, status: '未通知' },
+  { id: 'E11', name: '东江国业', hasTerminal: false, contact: '何工', phone: '8011', lng: 116.5622, lat: 23.1232, status: '未通知' },
+  { id: 'E12', name: '广业国业', hasTerminal: false, contact: '黄主任', phone: '8012', lng: 116.5644, lat: 23.1254, status: '未通知' },
+  { id: 'E13', name: '裕美公司', hasTerminal: false, contact: '林安全员', phone: '8013', lng: 116.5666, lat: 23.1276, status: '未通知' }
+]
+
+export const mockPatchTasks: PatchTask[] = [
+  { id: 'P001', type: '一级动火', location: '生产二部 罐区东侧', owner: '东粤化学·张班长', monitor: '9101 危化处置组长', status: '待核查', evidence: false },
+  { id: 'P002', type: '二级高处', location: '装卸区 3 号平台', owner: '凯美特·李工', monitor: '9102 巡查员', status: '待核查', evidence: false }
+]
+
+export const mockDrillPlans: DrillPlan[] = [
+  { id: 'D001', name: '危化品储罐泄漏专项演练', type: '危化品泄漏', location: '罐区 T-203', units: ['广石化', '吉化', '消防救援队'], status: '未开始' },
+  { id: 'D002', name: '可燃气体报警桌面推演', type: '可燃气报警', location: '生产一部', units: ['东粤化学', '园区应急办'], status: '未开始' }
 ]
