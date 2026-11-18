@@ -2,7 +2,7 @@
 
 融合通信 Demo 贴近平台契约与硬控规范的能力基线。本 spec 由 `2026-11-18-fusion-comm-productization` 变更回填，覆盖阶段一（demo 仓）已落地的三条需求；阶段二/三（脚手架契约、后端受控下行）在各自 Change 中扩展。
 
-> 阶段状态说明：下列场景逐字沿用已批准的 `spec-delta.md`，未收紧前提、未改变 acceptance。阶段一（demo 仓）只完成服务层收口与签名边界声明；「浏览器零密钥」与「端到端统一解包」为阶段二/三目标，当前尚未满足，详见各 Scenario 的阶段标注。
+> 阶段状态说明：下列场景的 WHEN 前提逐字沿用已批准的 `spec-delta.md`，未收紧；两条 THEN 按阶段一实际实现如实化（解包错误路径、边界声明落点），并附阶段状态标注，未新增或删减需求。阶段一（demo 仓）只完成服务层收口与签名边界声明；「浏览器零密钥」与「端到端统一解包」为阶段二/三目标，当前尚未满足。
 
 ## ADDED Requirements
 
@@ -13,7 +13,7 @@ Demo 的能力须以平台 `communication.openapi.json` 为契约参照组织服
 #### Scenario: 服务层按 B3 包络解包
 
 - **WHEN** 页面经 `services/communication` 调用任一能力且响应 `code=0`
-- **THEN** 服务层返回 `data` 载荷，`code!=0` 时 `unwrapBody`/`unwrapRows` 提供可识别错误路径
+- **THEN** 服务层原样返回包络（`data`/`rows`/`row`），页面按需取用；`code!=0` 时 `unwrapBody`/`unwrapRows` 提供可识别错误路径
 - **阶段状态**：阶段一服务层原样返回包络、页面仍读 `res.rows/res.row/res.data`；`unwrap*` 提供错误路径但端到端接入在阶段二随 generated types 统一完成。
 
 #### Scenario: 真实模式不外泄密钥
